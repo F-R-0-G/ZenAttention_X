@@ -30,9 +30,39 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".checkStatistic"
         tools:showIn="@layout/activity_check_statistic">
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/chart"
+
+        <RadioGroup
+            android:id="@+id/radioButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:checkedButton="@id/radioButtonWeek"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
+            >
+            <RadioButton
+                android:id="@+id/radioButtonWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="周"/>
+            <RadioButton
+                android:id="@+id/radioButtonMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="月"/>
+        </RadioGroup>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chart_week"
+            android:layout_below="@id/radioButtons"
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+        </com.github.mikephil.charting.charts.BarChart>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/chart_month"
+            android:layout_below="@id/radioButtons"
             android:layout_width="match_parent"
             android:layout_height="400dp">
         </com.github.mikephil.charting.charts.BarChart>

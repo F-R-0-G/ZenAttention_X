@@ -19,20 +19,32 @@ public class AttentionTimeData {
 
         SharedPreferences timeData = context.getSharedPreferences("AttentionTimeData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = timeData.edit();
-        Long getExist = timeData.getLong(calendarData, 0);
-        if (getExist == 0){
+        Long getExistDay = timeData.getLong(calendarData, 0);
+        Long getExistMonth = timeData.getLong(month, 0);
+        if (getExistDay == 0){
             editor.putLong(calendarData, time);
         }
         else{
-            editor.putLong(calendarData, time + getExist);
+            editor.putLong(calendarData, time + getExistDay);
+        }
+        if (getExistMonth == 0){
+            editor.putLong(month, time);
+        }
+        else {
+            editor.putLong(month, time + getExistMonth);
         }
         editor.apply();
     }
 
-    public static long getTime(String calendar, Context context){
+    public static long getTimeWeek(String calendar, Context context){
         SharedPreferences timeData = context.getSharedPreferences("AttentionTimeData", Context.MODE_PRIVATE);
         long getData = timeData.getLong(calendar, 0);
-        Log.e(TAG, Long.toString(getData));
+        return getData;
+    }
+
+    public static long getTimeMonth(String month, Context context){
+        SharedPreferences timeData = context.getSharedPreferences("AttentionTimeData", Context.MODE_PRIVATE);
+        long getData = timeData.getLong(month, 0);
         return getData;
     }
 
