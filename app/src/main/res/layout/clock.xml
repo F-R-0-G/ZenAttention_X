@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/Clock_ProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:background="@android:color/transparent"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/clock_progress_bar"
+            tools:max="100"
+            tools:progress="50"/>
+
+
+        <Chronometer
+            android:id="@+id/Clock_chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="65sp"
+            android:layout_alignBottom="@+id/Clock_ProgressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="85dp" />
+
+        <com.shawnlin.numberpicker.NumberPicker
+            android:id="@+id/number_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/Clock_ProgressBar"
+            android:layout_marginBottom="36dp"
+            android:layout_centerHorizontal="true"
+            app:np_textSize="30sp"
+            app:np_dividerColor="@color/colorPrimary"
+            app:np_dividerDistance="70dp"
+            app:np_dividerThickness="3dp"
+            app:np_selectedTextColor="@color/colorAccent"
+            app:np_selectedTextSize="40sp">
+        </com.shawnlin.numberpicker.NumberPicker>
+    </RelativeLayout>
+</FrameLayout>

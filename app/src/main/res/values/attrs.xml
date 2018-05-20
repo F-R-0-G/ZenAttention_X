@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="main_bg" format="reference"/>
+    <attr name="clock_bg" format="reference"/>
+    <attr name="clock_progress" format="reference|color"/>
+    <attr name="statistics_color" format="reference|color"/>
+    <attr name="button_color" format="reference|color"/>
+    <attr name="nav_head_bg" format="reference"/>
+    <attr name="nav_item_color" format="reference|color"/>
+    <attr name="change_bg" format="reference|color"/>
+    <attr name="change_textcolor" format="reference|color"/>
+</resources>

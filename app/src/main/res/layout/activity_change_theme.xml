@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.frog.zenattention.colorUi.widget.ColorLinerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="?attr/change_bg"
+    android:padding="10dp">
+
+    <com.frog.zenattention.colorUi.widget.ColorLinerLayout
+        android:id="@+id/ll_luxun"
+        android:layout_width="110dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="300dp"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <com.frog.zenattention.colorUi.widget.ColorImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#495A80" />
+
+        <com.frog.zenattention.colorUi.widget.ColorTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="鲁迅"
+            android:textColor="?attr/change_textcolor"
+            android:textSize="18sp" />
+    </com.frog.zenattention.colorUi.widget.ColorLinerLayout>
+
+    <com.frog.zenattention.colorUi.widget.ColorLinerLayout
+        android:id="@+id/ll_autumn"
+        android:layout_width="110dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <com.frog.zenattention.colorUi.widget.ColorImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#FFEFD5" />
+
+        <com.frog.zenattention.colorUi.widget.ColorTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="三秋"
+            android:textColor="?attr/change_textcolor"
+            android:textSize="18sp" />
+    </com.frog.zenattention.colorUi.widget.ColorLinerLayout>
+
+    <com.frog.zenattention.colorUi.widget.ColorLinerLayout
+        android:id="@+id/ll_picnic"
+        android:layout_width="110dp"
+        android:layout_height="200dp"
+
+        android:layout_marginTop="300dp"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <com.frog.zenattention.colorUi.widget.ColorImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#5c7a29" />
+
+        <com.frog.zenattention.colorUi.widget.ColorTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="路边野餐"
+            android:textColor="?attr/change_textcolor"
+            android:textSize="18sp" />
+    </com.frog.zenattention.colorUi.widget.ColorLinerLayout>
+
+</com.frog.zenattention.colorUi.widget.ColorLinerLayout>
