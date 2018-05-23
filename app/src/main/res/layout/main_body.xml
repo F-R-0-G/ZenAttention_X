@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_autumn"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/clock_bg"
+        android:layout_width="625dp"
+        android:layout_height="625dp"
+        android:layout_marginStart="-140dp"
+        android:layout_marginTop="-22dp"
+        android:src="@drawable/autumn_clock" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <include layout="@layout/main_title"/>
+
+        <include layout="@layout/clock"/>
+
+        <android.support.v4.widget.ContentLoadingProgressBar
+            android:id="@+id/cancel_progressBar"
+            android:layout_width="100dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="30dp"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:progress="0"
+            tools:max="100"
+            tools:progress="50"
+            android:layout_gravity="center_horizontal"
+            android:progressDrawable="@drawable/cancel_bar"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:animateLayoutChanges="true">
+            <Button
+                android:id="@+id/start_attach_attention"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:text="@string/start_attention"
+                android:textSize="25sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_bg"
+                />
+
+            <Button
+                android:id="@+id/stop_button"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:text="@string/pause_attention"
+                android:textSize="25sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_bg"
+                />
+
+            <Button
+                android:id="@+id/resume_button"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="70dp"
+                android:layout_centerHorizontal="true"
+                android:text="@string/continue_attention"
+                android:textSize="20sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_bg"
+                />
+
+            <Button
+                android:id="@+id/addTime_button"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="70dp"
+                android:layout_alignParentStart="true"
+                android:text="@string/add_time"
+                android:textSize="20sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_bg"
+                />
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="70dp"
+                android:layout_alignParentEnd="true"
+                android:text="@string/cancel_attention"
+                android:textSize="20sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_bg"
+                />
+
+            <Button
+                android:id="@+id/finish_button"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="70dp"
+                android:layout_alignParentEnd="true"
+                android:text="@string/finish_attention"
+                android:textSize="20sp"
+                android:textColor="#fff"
+                android:background="@drawable/button_bg"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">三秋树</string>
+    <string name="start_attention">开始专注</string>
+    <string name="pause_attention">暂停</string>
+    <string name="continue_attention">继续</string>
+    <string name="add_time">+1min</string>
+    <string name="cancel_attention">长按取消</string>
+    <string name="finish_attention">完成</string>
+    <string name="statistics">统计</string>
+    <string name="about">关于</string>
+    <string name="prompt_change_music">提示：长按可以切换音乐</string>
+</resources>
