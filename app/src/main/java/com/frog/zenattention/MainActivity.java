@@ -112,7 +112,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(displayNumber.length);
         numberPicker.setDisplayedValues(displayNumber);
-        numberPicker.setValue(6);
+        numberPicker.setValue(2);                                   // 避免因为过大而超出界限
         // 创建时间选择器
         startAttachAttention = findViewById(R.id.start_attach_attention);
         startAttachAttention.setOnClickListener(this);

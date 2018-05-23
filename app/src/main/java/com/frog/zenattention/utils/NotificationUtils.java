@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.frog.zenattention.R;
 
@@ -54,10 +55,13 @@ public class NotificationUtils extends ContextWrapper {
         builder = new Notification.Builder(getApplicationContext(), id)
                 .setContentTitle(title)
                 .setContentText(content)
+                .setColor(getResources().getColor(R.color.colorPrimary))
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_alarm_24dp)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setShowWhen(true)
+//                .addAction(R.drawable.ic_alarm_24dp, "完成", null)
                 .setAutoCancel(true);
     }
 
@@ -66,9 +70,12 @@ public class NotificationUtils extends ContextWrapper {
                 .setContentTitle(title)
                 .setContentText(content)
                 .setWhen(System.currentTimeMillis())
+                .setColor(getResources().getColor(R.color.colorPrimary))
                 .setSmallIcon(R.drawable.ic_alarm_24dp)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setShowWhen(true)
+//                .addAction(R.drawable.ic_alarm_24dp, "完成", null)
                 .setAutoCancel(true);
     }
 
