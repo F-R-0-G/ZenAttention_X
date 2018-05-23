@@ -10,15 +10,16 @@
     <application
         android:name=".app.BasicApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:persistent="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,14 +28,20 @@
         </activity>
 
         <meta-data
-            android:name="design_width"
+            android:name="designwidth"
             android:value="1080" />
         <meta-data
-            android:name="design_height"
-            android:value="1920" />
+            android:name="designdpi"
+            android:value="480" />
+        <meta-data
+            android:name="fontsize"
+            android:value="1.0" />
+        <meta-data
+            android:name="unit"
+            android:value="dp" />
 
         <activity android:name=".checkStatistic" />
-        <activity android:name=".ChangeTheme"></activity>
+        <activity android:name=".aboutPageActivity"/>
     </application>
 
 </manifest>

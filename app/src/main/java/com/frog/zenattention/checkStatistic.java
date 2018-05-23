@@ -1,13 +1,11 @@
 package com.frog.zenattention;
 
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 
@@ -24,8 +22,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,9 +41,11 @@ public class checkStatistic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().setNavigationBarColor(Color.parseColor("#897D55"));          // 设置底部导航栏的颜色
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));          // 设置底部导航栏的颜色
 
         setContentView(R.layout.activity_check_statistic);
+
+        ScreenAdapterTools.getInstance().loadView((ViewGroup) getWindow().getDecorView());
 
         barChart_week = findViewById(R.id.chart_week);
         drawWeekChart();
@@ -110,7 +110,7 @@ public class checkStatistic extends AppCompatActivity {
             }
         });
         set.setValueTextSize(15f);         // 设置柱状图上方的值的字体
-        set.setColors(new int[]{Color.parseColor("#B4A582")});
+        set.setColors(new int[]{getResources().getColor(R.color.colorPrimary)});
 
 
         BarData data = new BarData(set);
@@ -123,7 +123,7 @@ public class checkStatistic extends AppCompatActivity {
         barChart_week.getDescription().setEnabled(false);       // 将description label去掉
 
         AssetManager mgr=getAssets();
-        Typeface tf=Typeface.createFromAsset(mgr, "fonts/Extralight.ttf");
+        Typeface tf=Typeface.createFromAsset(mgr, "fonts/bamboo.ttf");
 
         XAxis xAxis = barChart_week.getXAxis();
         xAxis.setDrawGridLines(false);           // 去掉网格线
@@ -183,7 +183,7 @@ public class checkStatistic extends AppCompatActivity {
         });
 
         set.setValueTextSize(15f);         // 设置柱状图上方的值的字体
-        set.setColors(new int[]{Color.parseColor("#B4A582")});
+        set.setColors(new int[]{getResources().getColor(R.color.colorPrimary)});
         BarData data = new BarData(set);
         data.setBarWidth(0.9f);
         barChart_month.setData(data);
@@ -194,7 +194,7 @@ public class checkStatistic extends AppCompatActivity {
         barChart_month.getDescription().setEnabled(false);       // 将description label去掉
 
         AssetManager mgr=getAssets();
-        Typeface tf=Typeface.createFromAsset(mgr, "fonts/Extralight.ttf");
+        Typeface tf=Typeface.createFromAsset(mgr, "fonts/bamboo.ttf");
 
         XAxis xAxis = barChart_month.getXAxis();
         xAxis.setDrawGridLines(false);           // 去掉网格线

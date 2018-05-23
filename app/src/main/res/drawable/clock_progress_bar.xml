@@ -13,8 +13,8 @@
 
         <gradient
             android:angle="0"
-            android:endColor="?attr/clock_progress"
-            android:startColor="?attr/clock_progress"
+            android:endColor="@color/deep_light_green"
+            android:startColor="@color/deep_light_green"
             android:type="sweep"
             android:useLevel="false" />
     </shape>

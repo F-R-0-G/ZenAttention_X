@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/Clock_ProgressBar"
-            android:layout_marginBottom="36dp"
+            android:layout_marginBottom="40dp"
             android:layout_centerHorizontal="true"
             app:np_textSize="30sp"
             app:np_dividerColor="@color/colorPrimary"

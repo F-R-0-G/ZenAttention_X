@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -28,14 +29,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.frog.zenattention.colorUi.util.SharedPreferencesMgr;
 import com.frog.zenattention.utils.ActivityCollector;
 import com.frog.zenattention.utils.AlarmClock;
+import com.frog.zenattention.utils.HintPopupWindow;
 import com.frog.zenattention.utils.ToastUtil;
 import com.shawnlin.numberpicker.NumberPicker;
+import com.yatoooon.screenadaptation.ScreenAdapterTools;
+
+import java.util.ArrayList;
 
 
-public class MainActivity extends BasicActivity implements View.OnClickListener, View.OnTouchListener {
+public class MainActivity extends BasicActivity implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
     private Chronometer chronometer;
     private ProgressBar progressBar;
@@ -44,29 +48,22 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
     private Button stopButton;
     private Button cancelButton;
     private Button resumeButton;
+    private Button addTimeButton;
     private Button startAttachAttention;
+    private Button finishButton;
     private AlarmClock alarm_clock;
     private boolean isCancel = true;
     private ValueAnimator animator;
     private Vibrator vibrator;
 
-    Button start_music;
-    Button pause_music;
-    Button open_drawer;
-    Button start_attention;
+    private HintPopupWindow hintPopupWindow;
 
-    ImageView background;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    TextView quote1;
-    TextView quote2;
+    private Button open_statistics;
+    private Button start_music;
+    private Button pause_music;
 
-    MediaPlayer mediaPlayer1;
-    MediaPlayer mediaPlayer2;
-    int status1;
-    int status2;
-
-    private static final String TAG = "MainActivity";
+    MediaPlayer mediaPlayer;
+    int mediaPlayerStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,37 +80,23 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
 
         setContentView(R.layout.activity_main);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ScreenAdapterTools.getInstance().loadView((ViewGroup) getWindow().getDecorView());
 
         start_music = (Button) findViewById(R.id.start_music);
         pause_music = (Button) findViewById(R.id.pause_music);
-        open_drawer = (Button) findViewById(R.id.open_drawer);
+        open_statistics = (Button) findViewById(R.id.open_statistics);
         start_music.setOnClickListener(this);
         pause_music.setOnClickListener(this);
-        open_drawer.setOnClickListener(this);
+        open_statistics.setOnClickListener(this);
+
+        start_music.setOnLongClickListener(this);
+        pause_music.setOnLongClickListener(this);
 
         start_music.setVisibility(View.VISIBLE);
         pause_music.setVisibility(View.INVISIBLE);
 
         initMediaPlayer();
 
-        navigationView.setCheckedItem(R.id.nav_statistics);
-        Resources resource = (Resources) getBaseContext().getResources();
-        ColorStateList csl = (ColorStateList) resource.getColorStateList(R.color.navigation_menu_item_color);
-        navigationView.setItemTextColor(csl);
-        //设置侧边栏颜色
-        View headView = navigationView.getHeaderView(0);
-
-        quote1 = (TextView) headView.findViewById(R.id.quote_1);
-        quote2 = (TextView) headView.findViewById(R.id.quote_2);
-        AssetManager mgr = getAssets();
-        //根据路径得到Typeface
-        Typeface tf = Typeface.createFromAsset(mgr, "fonts/Extralight.ttf");
-        //设置字体
-        quote1.setTypeface(tf);
-        quote2.setTypeface(tf);
-        //
         chronometer = findViewById(R.id.Clock_chronometer);
         chronometer.setVisibility(View.INVISIBLE);
         progressBar = findViewById(R.id.Clock_ProgressBar);
@@ -150,90 +133,63 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
         resumeButton.setVisibility(View.INVISIBLE);
         resumeButton.getBackground().setAlpha(128); //设置半透明
         //继续按钮，设为不可见
+        addTimeButton = findViewById(R.id.addTime_button);
+        addTimeButton.setOnClickListener(this);
+        addTimeButton.setVisibility(View.INVISIBLE);
+        addTimeButton.getBackground().setAlpha(128); // 设置半透明
+        // 加10分钟按钮
+        finishButton = findViewById(R.id.finish_button);
+        finishButton.setOnClickListener(this);
+        finishButton.setVisibility(View.INVISIBLE);
+        finishButton.getBackground().setAlpha(128);
+        // 计时结束后完成按钮
         vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
         // 震动
-        alarm_clock = new AlarmClock(chronometer, progressBar,
-                MainActivity.this, numberPicker);
-        // 计时器实例
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+        //下面的操作是初始化弹出数据
+        ArrayList<String> strList = new ArrayList<>();
+        strList.add("选项item1");
+        strList.add("选项item2");
+        strList.add("选项item3");
+
+        ArrayList<View.OnClickListener> clickList = new ArrayList<>();
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                item.setChecked(false);
-                switch (item.getItemId()) {
-                    case R.id.nav_statistics:
-                        startActivity(new Intent(MainActivity.this, checkStatistic.class));
-                        //统计
-                        break;
-                    case R.id.nav_theme:
-                        startActivity(new Intent(MainActivity.this, ChangeTheme.class));
-                        //主题
-                        break;
-                    case R.id.nav_about:
-                        //关于
-                        break;
-                    default:
-                        break;
-                }
-                item.setChecked(false);
-                return true;
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "点击事件触发", Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        clickList.add(clickListener);
+        clickList.add(clickListener);
+        clickList.add(clickListener);
+        clickList.add(clickListener);
+
+        //具体初始化逻辑看下面的图
+        hintPopupWindow = new HintPopupWindow(this, strList, clickList);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_music:
-                if (!mediaPlayer1.isPlaying() && mediaPlayer1 != null) {
-                    if (status1 != 0) {
-                        mediaPlayer1.seekTo(status1);
-                    }
-                    mediaPlayer1.start(); // 开始播放
-                    mediaPlayer1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer arg0) {
-                            mediaPlayer1.start();
-                            mediaPlayer1.setLooping(true);
-                        }
-                    });
-                }
-                if (mediaPlayer2 != null) {
-                    if (!mediaPlayer2.isPlaying()) {
-                        if (status2 != 0) {
-                            mediaPlayer2.seekTo(status1);
-                        }
-                        mediaPlayer2.start(); // 开始播放
-                        mediaPlayer2.setVolume(0.2f,0.2f);
-                        mediaPlayer2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer arg0) {
-                                mediaPlayer2.start();
-                                mediaPlayer2.setLooping(true);
-                            }
-                        });
-                    }
-                }
-                start_music.setVisibility(View.INVISIBLE);
-                pause_music.setVisibility(View.VISIBLE);
+                ToastUtil.showToast(this,getString(R.string.prompt_change_music),Toast.LENGTH_SHORT);
+
                 break;
             case R.id.pause_music:
-                if (mediaPlayer1.isPlaying()) {
-                    mediaPlayer1.pause(); // 暂停播放
-                }
-                if(mediaPlayer2!=null){
-                    if (mediaPlayer2.isPlaying()) {
-                        mediaPlayer2.pause(); // 暂停播放
-                    }
-                }
-                start_music.setVisibility(View.VISIBLE);
-                pause_music.setVisibility(View.INVISIBLE);
+
                 break;
-            case R.id.open_drawer:
-                drawerLayout.openDrawer(GravityCompat.START);
+            case R.id.open_statistics:
+                startActivity(new Intent(this, checkStatistic.class));
                 break;
             case R.id.start_attach_attention:
+                alarm_clock = new AlarmClock(chronometer, progressBar,
+                        MainActivity.this, numberPicker,
+                        startAttachAttention,
+                        stopButton, addTimeButton, finishButton);
+                // 计时器实例
                 int num = numberPicker.getValue();
-                alarm_clock.startCounting(num, startAttachAttention, stopButton);
+                alarm_clock.startCounting(num);
                 startAttachAttention.setVisibility(View.INVISIBLE);
                 stopButton.setVisibility(View.VISIBLE);
                 vibrator.vibrate(50);
@@ -242,17 +198,53 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
                 stopButton.setVisibility(View.VISIBLE);
                 resumeButton.setVisibility(View.INVISIBLE);
                 cancelButton.setVisibility(View.INVISIBLE);
-                alarm_clock.resumeAlarm();
+                addTimeButton.setVisibility(View.INVISIBLE);
+                alarm_clock.resumeAlarm(0);
                 break;
             case R.id.stop_button:
                 resumeButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.VISIBLE);
+                addTimeButton.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.INVISIBLE);
                 alarm_clock.pauseAlarm();
+                break;
+            case R.id.addTime_button:
+                if (alarm_clock.isFinish) {         // 如果已经计时结束，则新建计时器
+                    alarm_clock = new AlarmClock(chronometer, progressBar,
+                            MainActivity.this, numberPicker,
+                            startAttachAttention,
+                            stopButton, addTimeButton, finishButton);
+                    alarm_clock.startCounting(1);
+                    stopButton.setVisibility(View.VISIBLE);
+                    addTimeButton.setVisibility(View.INVISIBLE);
+                    finishButton.setVisibility(View.INVISIBLE);
+                    vibrator.vibrate(50);
+                } else {
+                    stopButton.setVisibility(View.VISIBLE);
+                    resumeButton.setVisibility(View.INVISIBLE);
+                    cancelButton.setVisibility(View.INVISIBLE);
+                    addTimeButton.setVisibility(View.INVISIBLE);
+                    alarm_clock.addTime(1 * 60 * 1000);
+                    vibrator.vibrate(50);
+                }
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.start_music:
+                hintPopupWindow.showPopupWindow(v);
+                break;
+            case R.id.pause_music:
+                hintPopupWindow.showPopupWindow(v);
                 break;
             default:
                 break;
         }
+        return true;   //return true即可解决长按事件跟点击事件同时响应的问题
     }
 
     @Override
@@ -279,6 +271,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
                                 cancel_bar.setVisibility(View.INVISIBLE);
                                 resumeButton.setVisibility(View.INVISIBLE);
                                 cancelButton.setVisibility(View.INVISIBLE);
+                                addTimeButton.setVisibility(View.INVISIBLE);
                                 alarm_clock.cancelAlarm();
                                 ToastUtil.showToast(MainActivity.this, "计时已取消");
                                 vibrator.vibrate(50);
@@ -292,6 +285,18 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
                     animator.end();
                     cancel_bar.setVisibility(View.INVISIBLE);
                 }
+            case R.id.start_music:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    vibrator.vibrate(50);
+                    // 震动
+                }
+                break;
+            case R.id.pause_music:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    vibrator.vibrate(50);
+                    // 震动
+                }
+                break;
             default:
                 break;
         }
@@ -299,26 +304,6 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
     }
 
     private void initMediaPlayer() {
-        if (SharedPreferencesMgr.getInt("theme", 0) == 0) {
-            try {
-                mediaPlayer1 = MediaPlayer.create(this, R.raw.heavy_rain);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (SharedPreferencesMgr.getInt("theme", 0) == 1) {
-            try {
-                mediaPlayer1 = MediaPlayer.create(this, R.raw.tricky);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                mediaPlayer1 = MediaPlayer.create(this, R.raw.water);
-                mediaPlayer2 = MediaPlayer.create(this, R.raw.bird);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
     }
 
@@ -343,9 +328,6 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer1.release();
-        if (mediaPlayer2 != null) {
-            mediaPlayer2.release();
-        }
+        //mediaPlayer1.release();
     }
 }

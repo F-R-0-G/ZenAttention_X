@@ -3,9 +3,7 @@ package com.frog.zenattention.app;
 import android.app.Application;
 import android.content.Context;
 
-import com.frog.zenattention.colorUi.util.SharedPreferencesMgr;
-
-import org.litepal.LitePal;
+import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
 public class BasicApp extends Application {
 
@@ -18,9 +16,8 @@ public class BasicApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LitePal.initialize(this);
+        ScreenAdapterTools.init(this);
         context = getApplicationContext();
-        SharedPreferencesMgr.init(this, "frog");
     }
 
 }
