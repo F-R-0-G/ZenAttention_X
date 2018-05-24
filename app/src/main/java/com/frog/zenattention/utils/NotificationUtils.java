@@ -16,11 +16,11 @@ import android.support.v4.app.NotificationCompat;
 import com.frog.zenattention.R;
 
 /**
- * Created by LaoZhao on 2017/11/19.(Thanks!)
+ * Created by LaoZhao on 2017/11/19.
  * Refactored and updated by WenSun on 2018/4/6.
  * version 1.3
  * 用于实现可兼容的构建、发送通知（已在6.0、7.0、8.0测试）
- * 提示：创建实例时需传入Context
+ * 创建实例时需传入Context
  */
 
 public class NotificationUtils extends ContextWrapper {
@@ -32,7 +32,7 @@ public class NotificationUtils extends ContextWrapper {
     public static final String id = "channel_1";
     public static final String name = "channel_name_1";
 
-    //构造时需要传入Context
+    //构造时传入Context
     public NotificationUtils(Context context) {
         super(context);
     }

@@ -1,21 +1,17 @@
 package com.frog.zenattention;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.Typeface;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +20,22 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frog.zenattention.utils.ActivityCollector;
 import com.frog.zenattention.utils.AlarmClock;
 import com.frog.zenattention.utils.HintPopupWindow;
+import com.frog.zenattention.utils.PrefUtil;
 import com.frog.zenattention.utils.ToastUtil;
+import com.leon.lfilepickerlibrary.LFilePicker;
+import com.leon.lfilepickerlibrary.utils.Constant;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.yatoooon.screenadaptation.ScreenAdapterTools;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends BasicActivity implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
@@ -63,7 +62,10 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
     private Button pause_music;
 
     MediaPlayer mediaPlayer;
-    int mediaPlayerStatus;
+    int mediaPlayerStatus = 0;
+
+    private final int CHOOSE_MUSIC = 1000;
+    private final int REQUEST_WRITE_STORAGE = 1111;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +114,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(displayNumber.length);
         numberPicker.setDisplayedValues(displayNumber);
-        numberPicker.setValue(6);
+        numberPicker.setValue(1);
         // 创建时间选择器
         startAttachAttention = findViewById(R.id.start_attach_attention);
         startAttachAttention.setOnClickListener(this);
@@ -148,36 +150,188 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
 
         //下面的操作是初始化弹出数据
         ArrayList<String> strList = new ArrayList<>();
-        strList.add("选项item1");
-        strList.add("选项item2");
-        strList.add("选项item3");
+        strList.add("鸟");
+        strList.add("虫");
+        strList.add("鱼");
+        strList.add("雨");
+        strList.add("自定义");
 
         ArrayList<View.OnClickListener> clickList = new ArrayList<>();
-        View.OnClickListener clickListener = new View.OnClickListener() {
+        View.OnClickListener bird = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "点击事件触发", Toast.LENGTH_SHORT).show();
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bird);
+                    mediaPlayer.start();
+                } else {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bird);
+                }
+                ToastUtil.showToast(MainActivity.this, "已切换", Toast.LENGTH_SHORT);
+                PrefUtil.saveSelectedMusic("bird");
             }
         };
-        clickList.add(clickListener);
-        clickList.add(clickListener);
-        clickList.add(clickListener);
-        clickList.add(clickListener);
+        View.OnClickListener insect = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.insect);
+                    mediaPlayer.start();
+                } else {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.insect);
+                }
+                ToastUtil.showToast(MainActivity.this, "已切换", Toast.LENGTH_SHORT);
+                PrefUtil.saveSelectedMusic("insect");
+            }
+        };
+        View.OnClickListener fish = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.fish);
+                    mediaPlayer.start();
+                } else {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.fish);
+                }
+                ToastUtil.showToast(MainActivity.this, "已切换", Toast.LENGTH_SHORT);
+                PrefUtil.saveSelectedMusic("fish");
+            }
+        };
+        View.OnClickListener rain = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.heavy_rain);
+                    mediaPlayer.start();
+                } else {
+                    stopAndReleaseMedia();
+                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.heavy_rain);
+                }
+                ToastUtil.showToast(MainActivity.this, "已切换", Toast.LENGTH_SHORT);
+                PrefUtil.saveSelectedMusic("rain");
+            }
+        };
+        View.OnClickListener custom = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_STORAGE);
+                } else {
+                    chooseMusicFromStorage();
+                }
+                PrefUtil.saveSelectedMusic("custom");
+            }
+        };
+        clickList.add(bird);
+        clickList.add(insect);
+        clickList.add(fish);
+        clickList.add(rain);
+        clickList.add(custom);
 
-        //具体初始化逻辑看下面的图
         hintPopupWindow = new HintPopupWindow(this, strList, clickList);
 
+    }
+
+    private void chooseMusicFromStorage() {
+        new LFilePicker()
+                .withActivity(this)
+                .withRequestCode(CHOOSE_MUSIC)
+                .withTitle("选择音乐")
+                .withIconStyle(Constant.ICON_STYLE_BLUE)
+                .withMutilyMode(false)
+                //.withMaxNum(2)
+                .withStartPath("/storage/emulated/0/Download")//指定初始显示路径
+                .withNotFoundBooks("至少选择一个文件")
+                //.withIsGreater(false)//过滤文件大小 小于指定大小的文件
+                //.withFileSize(500 * 1024)//指定文件大小为500K
+                //.withChooseMode(false)//文件夹选择模式
+                .withFileFilter(new String[]{"mp3", "wma"})
+                .start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CHOOSE_MUSIC) {
+                List<String> list = data.getStringArrayListExtra("paths");
+                String path = list.get(0);
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    stopAndReleaseMedia();
+                    mediaPlayer = new MediaPlayer();
+                    try {
+                        mediaPlayer.setDataSource(path);
+                        mediaPlayer.prepare();
+                    } catch (IOException ex) {
+                        ToastUtil.showToast(this, "文件已损坏或不存在", Toast.LENGTH_SHORT);
+                    }
+                    mediaPlayer.start();
+                } else {
+                    stopAndReleaseMedia();
+                    mediaPlayer = new MediaPlayer();
+                    try {
+                        mediaPlayer.setDataSource(path);
+                        mediaPlayer.prepare();
+                    } catch (IOException ex) {
+                        ToastUtil.showToast(this, "文件已损坏或不存在", Toast.LENGTH_SHORT);
+                    }
+                }
+                PrefUtil.saveCustomMusicPath(path);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_WRITE_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    chooseMusicFromStorage();
+                } else {
+                    ToastUtil.showToast(this, "权限被拒绝", Toast.LENGTH_SHORT);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.start_music:
-                ToastUtil.showToast(this,getString(R.string.prompt_change_music),Toast.LENGTH_SHORT);
-
+                ToastUtil.showToast(this, getString(R.string.prompt_change_music), Toast.LENGTH_SHORT);
+                if (mediaPlayer != null) {
+                    if (mediaPlayerStatus != 0) {
+                        mediaPlayer.seekTo(mediaPlayerStatus);
+                    }
+                    mediaPlayer.start();
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer arg0) {
+                            mediaPlayer.start();
+                            mediaPlayer.setLooping(true);
+                        }
+                    });
+                    start_music.setVisibility(View.INVISIBLE);
+                    pause_music.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.pause_music:
-
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayerStatus = mediaPlayer.getCurrentPosition();
+                    mediaPlayer.pause();
+                    start_music.setVisibility(View.VISIBLE);
+                    pause_music.setVisibility(View.INVISIBLE);
+                }
                 break;
             case R.id.open_statistics:
                 startActivity(new Intent(this, checkStatistic.class));
@@ -209,12 +363,13 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
                 alarm_clock.pauseAlarm();
                 break;
             case R.id.addTime_button:
-                if (alarm_clock.isFinish) {         // 如果已经计时结束，则新建计时器
+                if (alarm_clock.isFinish) {
+                    // 如果已经计时结束，则新建计时器
                     alarm_clock = new AlarmClock(chronometer, progressBar,
                             MainActivity.this, numberPicker,
                             startAttachAttention,
                             stopButton, addTimeButton, finishButton);
-                    alarm_clock.startCounting(1);
+                    alarm_clock.startCounting(3);
                     stopButton.setVisibility(View.VISIBLE);
                     addTimeButton.setVisibility(View.INVISIBLE);
                     finishButton.setVisibility(View.INVISIBLE);
@@ -224,7 +379,7 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
                     resumeButton.setVisibility(View.INVISIBLE);
                     cancelButton.setVisibility(View.INVISIBLE);
                     addTimeButton.setVisibility(View.INVISIBLE);
-                    alarm_clock.addTime(1 * 60 * 1000);
+                    alarm_clock.addTime(10 * 60 * 1000);
                     vibrator.vibrate(50);
                 }
             default:
@@ -244,7 +399,8 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
             default:
                 break;
         }
-        return true;   //return true即可解决长按事件跟点击事件同时响应的问题
+        return true;
+        //return true即可解决长按事件跟点击事件同时响应的问题
     }
 
     @Override
@@ -304,7 +460,32 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
     }
 
     private void initMediaPlayer() {
-
+        String music = PrefUtil.getSelectedMusic();
+        mediaPlayerStatus = 0;
+        if (music == null) {
+            mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bird);
+        } else if (music.equals("custom")) {
+            mediaPlayer = new MediaPlayer();
+            try {
+                mediaPlayer.setDataSource(PrefUtil.getCustomMusicPath());
+                mediaPlayer.prepare();
+            } catch (IOException ex) {
+                ToastUtil.showToast(this, "文件损坏或不存在");
+                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bird);
+            }
+        } else {
+            if (music.equals("bird")) {
+                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bird);
+            } else if (music.equals("insect")) {
+                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.insect);
+            } else if (music.equals("fish")) {
+                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.fish);
+            } else if (music.equals("rain")) {
+                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.heavy_rain);
+            } else {
+                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.bird);
+            }
+        }
     }
 
     private long mExitTime = 0;
@@ -323,11 +504,20 @@ public class MainActivity extends BasicActivity implements View.OnClickListener,
         }
         return super.onKeyDown(keyCode, event);
     }
-    //实现再按一次退出，退出时说骚话并以home形式存储
+    //再按一次退出
+
+    private void stopAndReleaseMedia() {
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+            mediaPlayer.release();
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //mediaPlayer1.release();
+        stopAndReleaseMedia();
     }
 }

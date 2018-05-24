@@ -1,12 +1,14 @@
 package com.frog.zenattention;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.RadioGroup;
 
 import com.frog.zenattention.utils.AttentionTimeData;
@@ -36,14 +38,32 @@ public class checkStatistic extends AppCompatActivity {
     private BarChart barChart_month;
 
     private static final String TAG = "checkStatistic";
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.aboutPageButton:
+                startActivity(new Intent(checkStatistic.this, aboutPageActivity.class));
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.about_page, menu);
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));          // 设置底部导航栏的颜色
-
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));             // 设置状态栏的颜色
         setContentView(R.layout.activity_check_statistic);
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.checkStatisticBar);
+        toolbar.inflateMenu(R.menu.about_page);
+        setSupportActionBar(toolbar);
 
         ScreenAdapterTools.getInstance().loadView((ViewGroup) getWindow().getDecorView());
 
@@ -123,7 +143,7 @@ public class checkStatistic extends AppCompatActivity {
         barChart_week.getDescription().setEnabled(false);       // 将description label去掉
 
         AssetManager mgr=getAssets();
-        Typeface tf=Typeface.createFromAsset(mgr, "fonts/bamboo.ttf");
+        Typeface tf=Typeface.createFromAsset(mgr, "fonts/bambooooo.ttf");
 
         XAxis xAxis = barChart_week.getXAxis();
         xAxis.setDrawGridLines(false);           // 去掉网格线
@@ -194,7 +214,7 @@ public class checkStatistic extends AppCompatActivity {
         barChart_month.getDescription().setEnabled(false);       // 将description label去掉
 
         AssetManager mgr=getAssets();
-        Typeface tf=Typeface.createFromAsset(mgr, "fonts/bamboo.ttf");
+        Typeface tf=Typeface.createFromAsset(mgr, "fonts/bambooooo.ttf");
 
         XAxis xAxis = barChart_month.getXAxis();
         xAxis.setDrawGridLines(false);           // 去掉网格线

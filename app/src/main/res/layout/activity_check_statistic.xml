@@ -8,19 +8,16 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/checkStatisticBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="专注时间"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/toolbar_theme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="专注时间"
+        app:titleTextColor="@color/white"/>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,7 +35,7 @@
             android:orientation="horizontal"
             android:checkedButton="@id/radioButtonWeek"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="100dp"
             >
             <RadioButton
                 android:id="@+id/radioButtonWeek"

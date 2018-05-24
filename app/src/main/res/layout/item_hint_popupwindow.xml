@@ -14,7 +14,7 @@
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:textColor="#333"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"

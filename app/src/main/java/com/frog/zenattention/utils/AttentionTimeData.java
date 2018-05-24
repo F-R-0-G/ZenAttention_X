@@ -2,7 +2,6 @@ package com.frog.zenattention.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.Calendar;
 

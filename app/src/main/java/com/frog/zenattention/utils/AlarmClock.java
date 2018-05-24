@@ -1,16 +1,14 @@
 package com.frog.zenattention.utils;
 
-import android.animation.ValueAnimator;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ProgressBar;
@@ -33,6 +31,7 @@ public class AlarmClock {
     private Button addTimeButton;
     private Button finishButton;
     private long leftTime;
+    private Vibrator vibrator;
 
     private AlarmClock am = this;
 
@@ -50,6 +49,7 @@ public class AlarmClock {
         this.stopButton = stopButton;
         this.addTimeButton = addTimeButton;
         this.finishButton = finishButton;
+        vibrator = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
     }
 
     public void startCounting(final int numberChoosed){
@@ -83,6 +83,7 @@ public class AlarmClock {
                 isFinish = true;
                 chronometer.stop();
                 chronometer.setText("00:00");
+                progressBar.setProgress(MAX_PROGRESS);
                 countDownTimer.cancel();
 
                 stopButton.setVisibility(View.INVISIBLE);
@@ -97,6 +98,8 @@ public class AlarmClock {
                 NotificationUtils notification = new NotificationUtils(context);
                 notification.sendNotification("时间","预设时间到", pi);
 
+                vibrator.vibrate(50);
+
                 PowerManager pm = (PowerManager) context       // 点亮屏幕
                         .getSystemService(Context.POWER_SERVICE);
                 boolean screenOn = pm.isScreenOn();
@@ -104,8 +107,8 @@ public class AlarmClock {
                     PowerManager.WakeLock wl = pm.newWakeLock(
                             PowerManager.ACQUIRE_CAUSES_WAKEUP |
                                     PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
-                    wl.acquire(10000); // 点亮屏幕
-                    wl.release(); // 释放
+                    wl.acquire(); // 点亮屏幕
+                   // wl.release(); // 释放
                 }
 
                 finishButton.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.frog.zenattention.checkStatistic">
+    <item
+        android:id="@+id/aboutPageButton"
+        android:title="关于" />
+    <!--<item-->
+        <!--android:id="@+id/no"-->
+        <!--android:title="nothing"-->
+        <!--app:showAsAction="never"/>-->
+</menu>
